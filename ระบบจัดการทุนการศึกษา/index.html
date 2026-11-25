@@ -2,6 +2,8 @@
 <html lang="th" data-bs-theme="light" data-tw-accent="indigo">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Zq8iVYxWAOtI21W6NIuCb91qLTCadpQwTg+jAFq5maM='; style-src 'sha256-jDS14TAcdPBEzbDhZSVN9AxIMIlhXk5nMhKgdOxJgdo='; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="คู่มือภาษาไทยสำหรับระบบจัดการทุนการศึกษา อ้างอิงจากโค้ดที่ส่งมอบ พร้อมขั้นตอนใช้งานและข้อจำกัด">
   <title>คู่มือการใช้งาน — ระบบจัดการทุนการศึกษา</title>
@@ -131,7 +133,7 @@
       </aside>
       <main id="main" tabindex="-1">
         <div class="toolbar" role="search" aria-label="ค้นหาในคู่มือ">
-          <div class="search-box"><label for="search">ค้นหาคำในคู่มือ</label><div class="search-row"><input id="search" type="search" placeholder="เช่น รูปภาพ หรือ CSV" aria-controls="chapters" aria-describedby="search-status"><button id="clear" type="button">ล้าง</button></div></div>
+          <div class="search-box"><label for="search">ค้นหาคำในคู่มือ</label><div class="search-row"><input id="search" type="search" autocomplete="off" placeholder="เช่น รูปภาพ หรือ CSV" aria-controls="chapters" aria-describedby="search-status"><button id="clear" type="button">ล้าง</button></div></div>
           <div class="toolbar-buttons"><button id="theme" type="button" aria-pressed="false">โหมดมืด</button><button id="print" type="button">พิมพ์ / PDF</button></div>
         </div>
         <p id="search-status" class="search-status js-only" role="status" aria-live="polite"></p>
@@ -141,6 +143,11 @@
           <p>ตั้งแต่ตรวจรายชื่อนักเรียน บันทึกทุน ไปจนถึงอ่านรายงาน พร้อมจุดตรวจสอบที่ช่วยให้ข้อมูลตรงกับทะเบียนจริง</p>
           <span class="label">เอกสารคู่มือ ไม่ใช่แอปพลิเคชันจริง</span>
         </header>
+        <div class="callout" aria-label="เกี่ยวกับเว็บไซต์นี้">
+          <strong>เว็บไซต์เอกสารของ sanwithz</strong>
+          <p>หน้านี้เป็นคู่มือเท่านั้น ไม่มีแบบฟอร์มเข้าสู่ระบบ ไม่รับรหัสผ่านหรือข้อมูลนักเรียน และไม่ส่งคำค้นออกจากเครื่อง โปรดขอลิงก์แอปจริงจากเจ้าของระบบโดยตรง</p>
+          <p><a href="https://github.com/sanwithz/Project-Guildance" rel="noopener noreferrer">ดูซอร์สโค้ดและแจ้งปัญหาผ่าน GitHub</a></p>
+        </div>
         <noscript><p class="callout">ปิด JavaScript อยู่: อ่านเนื้อหา ใช้สารบัญ และเปิดหัวข้อพับได้ตามปกติ หากต้องการค้นหา ใช้คำสั่งค้นหาของเบราว์เซอร์ หากจะพิมพ์ ให้เปิดหัวข้อพับทั้งหมดก่อน</p></noscript>
         <div class="detail-actions" aria-label="จัดการหัวข้อพับในเนื้อหา"><button id="expand" type="button">ขยายหัวข้อทั้งหมด</button><button id="collapse" type="button">ย่อหัวข้อทั้งหมด</button></div>
         <div id="empty" class="empty" hidden><h2>ไม่พบหัวข้อที่ตรงกับคำค้น</h2><p>ลองใช้คำสั้นลง เช่น ทุน นักเรียน หรือ รูปภาพ</p><button id="empty-clear" type="button">ล้างคำค้นและแสดงทั้งหมด</button></div>
