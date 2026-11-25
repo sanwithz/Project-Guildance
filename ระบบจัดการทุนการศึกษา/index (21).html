@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th" data-bs-theme="light" data-tw-accent="indigo">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="คู่มือภาษาไทยสำหรับระบบจัดการทุนการศึกษา อ้างอิงจากโค้ดที่ส่งมอบ พร้อมขั้นตอนใช้งานและข้อจำกัด">
+  <title>คู่มือการใช้งาน — ระบบจัดการทุนการศึกษา</title>
+  <style>
+    :root {
+      --color-indigo-50:oklch(96.2% .018 272.314); --color-indigo-100:oklch(93% .034 272.788);
+      --color-indigo-200:oklch(87% .065 274.039); --color-indigo-300:oklch(78.5% .115 274.713);
+      --color-indigo-400:oklch(67.3% .182 276.935); --color-indigo-500:oklch(58.5% .233 277.117);
+      --color-indigo-600:oklch(51.1% .262 276.966); --color-indigo-700:oklch(45.7% .24 277.023);
+      --color-indigo-800:oklch(39.8% .195 277.366);
+      --color-slate-50:oklch(98.4% .003 247.858); --color-slate-100:oklch(96.8% .007 247.896);
+      --color-slate-200:oklch(92.9% .013 255.508); --color-slate-300:oklch(86.9% .022 252.894);
+      --color-slate-400:oklch(70.4% .04 256.788); --color-slate-600:oklch(44.6% .043 257.281);
+      --color-slate-800:oklch(27.9% .041 260.031); --color-slate-900:oklch(20.8% .042 265.755);
+      --color-slate-950:oklch(12.9% .042 264.695);
+      --page:var(--color-slate-50); --surface:#fff; --soft:var(--color-slate-100);
+      --ink:var(--color-slate-800); --heading:var(--color-slate-900); --muted:var(--color-slate-600);
+      --line:var(--color-slate-200); --accent:var(--color-indigo-700); --tint:var(--color-indigo-50);
+      --note-bg:#fffbeb; --note-ink:#78350f; --note-line:#e5c985; --focus:var(--color-indigo-600);
+      color-scheme:light;
+    }
+    [data-bs-theme="dark"] {
+      --page:var(--color-slate-950); --surface:var(--color-slate-900); --soft:var(--color-slate-800);
+      --ink:var(--color-slate-200); --heading:var(--color-slate-50); --muted:var(--color-slate-300);
+      --line:var(--color-slate-600); --accent:var(--color-indigo-200); --tint:var(--color-slate-800);
+      --note-bg:#30291c; --note-ink:#fde6b3; --note-line:#8b7241; --focus:var(--color-indigo-300);
+      color-scheme:dark;
+    }
+    * { box-sizing:border-box; }
+    html { scroll-padding-top:1.5rem; }
+    body { margin:0; background:var(--page); color:var(--ink); font-family:Tahoma,'Noto Sans Thai',system-ui,sans-serif; font-size:16px; line-height:1.85; overflow-wrap:anywhere; }
+    a { color:var(--accent); text-underline-offset:.2em; }
+    a:hover { text-decoration-thickness:2px; }
+    :focus-visible { outline:3px solid var(--focus); outline-offset:4px; }
+    h1,h2,h3 { color:var(--heading); line-height:1.5; text-wrap:pretty; }
+    h1 { font-size:clamp(1.65rem,3vw,2.65rem); margin:.65rem 0 1rem; letter-spacing:-.025em; }
+    h2 { font-size:1.5rem; margin:0 0 1rem; }
+    h3 { font-size:1.08rem; margin:1.6rem 0 .5rem; }
+    p { margin:.65rem 0 1rem; } ul,ol { padding-inline-start:1.5rem; } li { margin:.5rem 0; }
+    button,input { font:inherit; max-width:100%; }
+    button { cursor:pointer; border:1px solid var(--line); border-radius:.625rem; padding:.5rem .85rem; background:var(--surface); color:var(--ink); line-height:1.6; min-height:44px; }
+    button:hover { background:var(--tint); border-color:var(--accent); }
+    input { min-width:0; width:100%; border:1px solid var(--line); border-radius:.625rem; padding:.55rem .75rem; background:var(--surface); color:var(--ink); min-height:44px; }
+    code { font-family:ui-monospace,monospace; font-size:.88em; overflow-wrap:anywhere; white-space:normal; }
+    code.schema { display:block; padding:.8rem; background:var(--soft); border-radius:.625rem; line-height:1.9; }
+    .skip { position:absolute; left:1rem; top:-8rem; z-index:10; padding:.75rem; background:var(--surface); }
+    .skip:focus { top:1rem; }
+    .shell { max-width:1320px; margin:auto; padding:1.5rem 2rem 4rem; }
+    .masthead { display:flex; align-items:center; gap:.85rem; border-bottom:1px solid var(--line); padding-bottom:1.25rem; margin-bottom:1.75rem; }
+    .mark { display:grid; place-items:center; width:42px; height:42px; flex:0 0 42px; color:var(--accent); border:1px solid var(--line); border-radius:.875rem; background:var(--surface); }
+    .masthead strong { display:block; font-size:.95rem; color:var(--heading); } .small,.masthead span { font-size:.82rem; color:var(--muted); }
+    .layout { display:grid; grid-template-columns:235px minmax(0,1fr); gap:2.75rem; align-items:start; }
+    aside { position:sticky; top:1.5rem; max-height:calc(100vh - 3rem); overflow:auto; padding:.25rem .35rem .75rem; }
+    .toc { border:0; background:transparent; padding:0; } .toc>summary { font-weight:bold; color:var(--heading); padding:0 0 .7rem; }
+    .toc ol { list-style:none; padding:0; margin:0; } .toc li { margin:0; }
+    .toc a { display:block; border-radius:.625rem; padding:.4rem .65rem; font-size:.88rem; text-decoration:none; }
+    .toc a:hover,.toc a[aria-current="location"] { background:var(--tint); color:var(--accent); }
+    .toc .num { display:inline-block; width:1.8rem; font-family:ui-monospace,monospace; font-size:.75rem; color:var(--muted); }
+    main { min-width:0; } .toolbar { display:none; gap:.6rem; flex-wrap:wrap; align-items:end; margin-bottom:1.25rem; }
+    .js .toolbar { display:flex; } .search-box { flex:1 1 220px; } .search-box label { display:block; font-size:.82rem; color:var(--muted); margin-bottom:.25rem; }
+    .search-row { display:flex; gap:.45rem; } .search-row input { flex:1; } .toolbar-buttons { display:flex; gap:.5rem; flex-wrap:wrap; }
+    .search-status { color:var(--muted); font-size:.85rem; margin:.5rem 0 1.2rem; } .js-only { display:none; } .js .js-only { display:block; }
+    .hero { background:var(--color-indigo-800); color:var(--color-indigo-100); padding:clamp(1.25rem,4vw,2.6rem); border-radius:.875rem; margin-bottom:1.5rem; border:1px solid var(--color-indigo-700); }
+    .hero h1 { color:#fff; } .hero p { max-width:42rem; } .eyebrow { font-size:.78rem; font-weight:bold; letter-spacing:.08em; }
+    .hero .label { display:inline-block; font-size:.8rem; padding:.2rem .65rem; border:1px solid var(--color-indigo-300); border-radius:2rem; }
+    .section { padding:2rem clamp(1rem,3vw,2rem); border:1px solid var(--line); background:var(--surface); border-radius:.875rem; margin-bottom:1.25rem; scroll-margin-top:1.5rem; }
+    .section-number { display:block; font-family:ui-monospace,monospace; font-size:.75rem; color:var(--accent); letter-spacing:.08em; margin-bottom:.4rem; }
+    .lead { color:var(--muted); } .callout { border:1px solid var(--line); border-inline-start:3px solid var(--accent); border-radius:.625rem; background:var(--tint); padding:.8rem 1rem; margin:1.2rem 0; }
+    .warning { background:var(--note-bg); color:var(--note-ink); border-color:var(--note-line); } .callout p:last-child { margin-bottom:0; }
+    .steps { counter-reset:step; list-style:none; padding:0; }
+    .steps>li { counter-increment:step; position:relative; padding-inline-start:2.6rem; margin:1rem 0; }
+    .steps>li::before { content:counter(step,decimal-leading-zero); position:absolute; inset-inline-start:0; top:.15rem; color:var(--accent); background:var(--tint); border-radius:.5rem; width:1.9rem; text-align:center; font:600 .8rem/1.9rem ui-monospace,monospace; }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.8rem; margin:1rem 0; }
+    .mini { background:var(--soft); border:1px solid var(--line); border-radius:.875rem; padding:1rem; } .mini h3 { margin:0 0 .3rem; } .mini p { margin:0; }
+    dl { margin:1rem 0; } dt { font-weight:bold; color:var(--heading); margin-top:1rem; } dd { margin:.25rem 0 1rem; }
+    details { border:1px solid var(--line); border-radius:.875rem; padding:.85rem 1rem; margin:1rem 0; background:var(--surface); }
+    summary { cursor:pointer; color:var(--heading); font-weight:bold; } details[open]>summary { margin-bottom:.8rem; }
+    .detail-actions { display:none; gap:.5rem; flex-wrap:wrap; margin:1rem 0; } .js .detail-actions { display:flex; }
+    .table-wrap { max-width:100%; } table { width:100%; border-collapse:collapse; font-size:.9rem; table-layout:fixed; }
+    th,td { text-align:start; vertical-align:top; padding:.75rem .6rem; border-bottom:1px solid var(--line); overflow-wrap:anywhere; } th { background:var(--soft); color:var(--heading); }
+    caption { text-align:start; color:var(--muted); padding:.5rem 0; font-size:.85rem; } .empty { border:1px dashed var(--line); padding:2rem 1rem; text-align:center; border-radius:.875rem; background:var(--surface); }
+    [hidden] { display:none !important; } footer { padding:1.5rem 0; color:var(--muted); font-size:.82rem; } .back { font-size:.85rem; }
+    @media (max-width:900px) { .shell { padding:1rem 1rem 2rem; } .layout { grid-template-columns:minmax(0,1fr); gap:1rem; } aside { position:static; max-height:none; padding:0; } .toc { background:var(--surface); border:1px solid var(--line); padding:1rem; border-radius:.875rem; } .toc ol { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:450px) { .shell { padding:.75rem .65rem 2rem; } .cards,.toc ol { grid-template-columns:minmax(0,1fr); } .section { padding:1.25rem 1rem; } h2 { font-size:1.3rem; } .toolbar-buttons { width:100%; } .toolbar-buttons button { flex:1; } th,td { padding:.5rem .3rem; font-size:.8rem; } .steps>li { padding-inline-start:2.2rem; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; } }
+    @media print {
+      :root,[data-bs-theme="dark"] { --page:#fff; --surface:#fff; --soft:#f2f2f2; --ink:#111; --heading:#000; --muted:#333; --line:#bbb; --accent:#222; --tint:#f5f5f5; --note-bg:#fff; --note-ink:#111; --note-line:#888; color-scheme:light; }
+      @page { margin:16mm; } body { font-size:10.5pt; line-height:1.7; } .shell { max-width:none; padding:0; } .layout { display:block; }
+      aside,.toolbar,.search-status,.detail-actions,.empty,.skip,.back,.no-print { display:none !important; }
+      .section[hidden] { display:block !important; } .hero { background:#fff; color:#222; border:1px solid #aaa; padding:1rem; } .hero h1 { color:#000; }
+      .section { border:0; border-top:1px solid #aaa; padding:1rem 0; border-radius:0; margin:1rem 0; }
+      h1 { font-size:22pt; } h2 { font-size:16pt; break-after:avoid; } h3,summary,dt { break-after:avoid; } li,tr,.mini { break-inside:avoid; }
+      details { border:0; padding:.5rem 0; } details::details-content { display:block; content-visibility:visible; } details>* { visibility:visible; }
+      .cards { display:block; } .mini { margin:.5rem 0; } a { color:#111; text-decoration:none; } .masthead { margin-bottom:1rem; } .mark { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">ข้ามไปเนื้อหาคู่มือ</a>
+  <div class="shell" id="top">
+    <header class="masthead">
+      <div class="mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v15M3 4c4-1 7-1 9 1 2-2 5-2 9-1v14c-4-1-7-1-9 1-2-2-5-2-9-1Z"/></svg></div>
+      <div><strong>ระบบจัดการทุนการศึกษา</strong><span>คู่มืออ้างอิงสำหรับผู้ใช้งานและผู้ดูแลระบบ</span></div>
+    </header>
+    <div class="layout">
+      <aside>
+        <nav aria-label="สารบัญคู่มือ">
+          <details class="toc" open>
+            <summary>สารบัญคู่มือ</summary>
+            <ol>
+              <li><a href="#start"><span class="num">01</span>เริ่มต้นใช้งาน</a></li>
+              <li><a href="#account"><span class="num">02</span>เข้าและออกจากระบบ</a></li>
+              <li><a href="#dashboard"><span class="num">03</span>อ่านแดชบอร์ด</a></li>
+              <li><a href="#classes"><span class="num">04</span>ห้องเรียนและรายละเอียด</a></li>
+              <li><a href="#students"><span class="num">05</span>นักเรียนและประวัติ</a></li>
+              <li><a href="#grants"><span class="num">06</span>เพิ่มทุนและตรวจทุนซ้ำ</a></li>
+              <li><a href="#images"><span class="num">07</span>รูปภาพประกอบ</a></li>
+              <li><a href="#manage"><span class="num">08</span>แก้ไขและลบทุน</a></li>
+              <li><a href="#csv"><span class="num">09</span>ตัวกรองและ CSV</a></li>
+              <li><a href="#reports"><span class="num">10</span>รายงานและการซิงค์</a></li>
+              <li><a href="#help"><span class="num">11</span>แก้ปัญหาเบื้องต้น</a></li>
+              <li><a href="#appendix"><span class="num">12</span>ภาคผนวกผู้ดูแล</a></li>
+            </ol>
+          </details>
+          <p class="small">อ่านได้ออฟไลน์ ไม่ต้องเข้าสู่ระบบ<br>ค้นหาและพิมพ์ได้จากแถบเครื่องมือ</p>
+        </nav>
+      </aside>
+      <main id="main" tabindex="-1">
+        <div class="toolbar" role="search" aria-label="ค้นหาในคู่มือ">
+          <div class="search-box"><label for="search">ค้นหาคำในคู่มือ</label><div class="search-row"><input id="search" type="search" placeholder="เช่น รูปภาพ หรือ CSV" aria-controls="chapters" aria-describedby="search-status"><button id="clear" type="button">ล้าง</button></div></div>
+          <div class="toolbar-buttons"><button id="theme" type="button" aria-pressed="false">โหมดมืด</button><button id="print" type="button">พิมพ์ / PDF</button></div>
+        </div>
+        <p id="search-status" class="search-status js-only" role="status" aria-live="polite"></p>
+        <header class="hero">
+          <span class="eyebrow">คู่มืออ้างอิงการทำงาน</span>
+          <h1>คู่มือการใช้งาน<br>ระบบจัดการทุนการศึกษา</h1>
+          <p>ตั้งแต่ตรวจรายชื่อนักเรียน บันทึกทุน ไปจนถึงอ่านรายงาน พร้อมจุดตรวจสอบที่ช่วยให้ข้อมูลตรงกับทะเบียนจริง</p>
+          <span class="label">เอกสารคู่มือ ไม่ใช่แอปพลิเคชันจริง</span>
+        </header>
+        <noscript><p class="callout">ปิด JavaScript อยู่: อ่านเนื้อหา ใช้สารบัญ และเปิดหัวข้อพับได้ตามปกติ หากต้องการค้นหา ใช้คำสั่งค้นหาของเบราว์เซอร์ หากจะพิมพ์ ให้เปิดหัวข้อพับทั้งหมดก่อน</p></noscript>
+        <div class="detail-actions" aria-label="จัดการหัวข้อพับในเนื้อหา"><button id="expand" type="button">ขยายหัวข้อทั้งหมด</button><button id="collapse" type="button">ย่อหัวข้อทั้งหมด</button></div>
+        <div id="empty" class="empty" hidden><h2>ไม่พบหัวข้อที่ตรงกับคำค้น</h2><p>ลองใช้คำสั้นลง เช่น ทุน นักเรียน หรือ รูปภาพ</p><button id="empty-clear" type="button">ล้างคำค้นและแสดงทั้งหมด</button></div>
+        <div id="chapters">
+          <section class="section" id="start" aria-labelledby="start-title">
+            <span class="section-number">01 / เริ่มต้น</span><h2 id="start-title" tabindex="-1">เส้นทางใช้งานครั้งแรก</h2>
+            <p class="lead">เปิดไฟล์คู่มือนี้ด้วยเบราว์เซอร์ได้ทันที ส่วนการบันทึกข้อมูลต้องทำในแอปจริงที่เจ้าของระบบจัดเตรียมให้</p>
+            <ol class="steps">
+              <li><strong>ขอช่องทางเข้าแอปและบัญชีจากเจ้าของระบบ</strong> พร้อมประเภทผู้ใช้ที่ตรงกับบัญชี อ่าน <a href="#account">วิธีเข้าสู่ระบบ</a></li>
+              <li><strong>ตรวจว่าข้อมูลมาจากทะเบียนจริง</strong> หากพบคำเตือนว่าใช้ข้อมูลตัวอย่าง ให้หยุดงานจริงและแจ้งผู้ดูแลก่อน</li>
+              <li><strong>เลือกนักเรียนที่ถูกคนและดูประวัติ</strong> ตรวจรหัส ห้อง และทุนเดิมก่อนกด <strong>เพิ่มทุน</strong> จากบัตรนักเรียนหรือรายละเอียดห้องเรียน</li>
+              <li><strong>บันทึกแล้วตรวจกลับ</strong> ตรวจยอดและรูปในประวัติ จากนั้นให้ผู้มีสิทธิ์เข้าถึงชีตจริงตรวจแถวข้อมูล หากผลไม่แน่ชัด อย่ากดบันทึกซ้ำทันที</li>
+              <li><strong>อ่านรายงานหรือส่งออกอย่างเข้าใจขอบเขต</strong> CSV รวมทุนทั้งหมดที่โหลดมา และตัวเลือกเดือนมีผลเฉพาะรายงานสรุปรายเดือน</li>
+            </ol>
+            <div class="callout"><strong>ขอบเขตเอกสาร</strong><p>อ้างอิงไฟล์ที่ส่งมอบ <code>index.html</code> และ <code>API.gs</code> เท่านั้น ไม่ใช่ผลทดสอบระบบที่ติดตั้งใช้งานจริง และยังไม่ได้ทดสอบการเชื่อมต่อ Google ที่ใช้งานจริง คู่มือนี้ไม่บันทึกหรือส่งข้อมูลไป Google</p></div>
+            <p class="small">เก็บไฟล์คู่มือแยกจากแอปจริงเสมอ ห้ามนำคู่มือนี้ไปทับไฟล์ <code>index</code> ของแอป เพราะ <code>doGet</code> เรียกไฟล์นั้นเป็นหน้าระบบ</p>
+          </section>
+          <section class="section" id="account" aria-labelledby="account-title">
+            <span class="section-number">02 / บัญชีผู้ใช้</span><h2 id="account-title" tabindex="-1">เข้าสู่ระบบและออกจากระบบ</h2>
+            <ol class="steps">
+              <li>เปิดแอปจริง กรอก <strong>ชื่อผู้ใช้</strong> และ <strong>รหัสผ่าน</strong> ที่เจ้าของระบบมอบให้ ไม่ใช้ข้อมูลตัวอย่างที่อาจปรากฏบนหน้าแอป</li>
+              <li>เลือก <strong>ประเภทผู้ใช้</strong> เป็น <strong>ครู</strong> (<code>teacher</code>) หรือ <strong>ผู้ดูแลระบบ</strong> (<code>admin</code>) ให้ตรงกับบัญชี แล้วกด <strong>เข้าสู่ระบบ</strong></li>
+              <li>ตรวจชื่อและป้ายประเภทผู้ใช้ที่ส่วนหัว รอการโหลดข้อมูลก่อนเริ่มทำงาน</li>
+              <li>เมื่อเสร็จงาน กด <strong>ออกจากระบบ</strong> ที่ส่วนหัว แล้วกด <strong>ออกจากระบบ</strong> ในกล่องยืนยัน หากยังทำงานต่อ ให้กด <strong>ยกเลิก</strong></li>
+            </ol>
+            <p>ระบบเทียบชื่อผู้ใช้ รหัสผ่าน และประเภทผู้ใช้กับชีต <code>Role</code> และแสดงค่า <code>name</code> หลังเข้าใช้สำเร็จ หากเข้าไม่ได้ ให้ตรวจทั้งสามช่องก่อนติดต่อเจ้าของบัญชี</p>
+            <div class="callout"><strong>ประเภทผู้ใช้ไม่ได้แปลว่าสิทธิ์ต่างกัน</strong><p>โค้ดฝั่งเซิร์ฟเวอร์ที่ส่งมาไม่ได้บังคับสิทธิ์อ่าน/เพิ่ม/แก้ไข/ลบแยกตามครูหรือผู้ดูแล อย่าใช้ป้ายประเภทผู้ใช้เป็นหลักประกันการจำกัดสิทธิ์ ดู <a href="#appendix">ข้อควรจัดการด้านการเข้าถึง</a></p></div>
+          </section>
+          <section class="section" id="dashboard" aria-labelledby="dashboard-title">
+            <span class="section-number">03 / ภาพรวม</span><h2 id="dashboard-title" tabindex="-1">อ่านตัวเลขบนแดชบอร์ดให้ถูกความหมาย</h2>
+            <p>เลือกแท็บ <strong>แดชบอร์ด</strong> ตัวเลขคำนวณจากข้อมูลที่โหลดอยู่ในหน้าแอป</p>
+            <div class="cards">
+              <div class="mini"><h3>ยอดทุนทั้งหมด (บาท)</h3><p>ผลรวมจำนวนเงินจากรายการทุนทั้งหมด</p></div>
+              <div class="mini"><h3>นักเรียนที่ได้รับทุน</h3><p>นับรหัสนักเรียนที่ไม่ซ้ำในรายการทุน ไม่ใช่จำนวนนักเรียนทั้งทะเบียน</p></div>
+              <div class="mini"><h3>จำนวนทุนที่แจกจ่าย</h3><p>นับจำนวนรายการบันทึกทุน ไม่ใช่จำนวนประเภทหรือชื่อทุนที่ไม่ซ้ำ</p></div>
+              <div class="mini"><h3>ทุนเดือนนี้ (บาท)</h3><p>รวมรายการที่วันที่ตรงกับเดือนปัจจุบันจากวันที่ของเครื่องผู้ใช้ โดยโค้ดสร้างเดือนผ่าน ISO/UTC</p></div>
+            </div>
+            <h3>ยอดทุนตามระดับชั้น</h3><p>อ่านจำนวนนักเรียน ยอดทุน และเฉลี่ยต่อคน โดยระบบจัดระดับจากรหัสห้องรูปแบบ <code>mN</code> เช่น <code>m1/1</code> จำนวนคนรวม<strong>นักเรียนทุกคน</strong>ในระดับนั้น ค่าเฉลี่ยจึงเป็นยอดทุนหารด้วยนักเรียนทั้งหมด ไม่ใช่เฉพาะผู้รับทุน และแสดงค่าเฉลี่ยปัดเป็นจำนวนเต็ม</p>
+            <h3>ผู้รับทุนสูงสุด 10 อันดับ</h3><p>รวมยอดทุนต่อรหัสและเรียงจากมากไปน้อย เฉพาะรหัสที่พบในทะเบียนนักเรียน หากรหัสทุนไม่ตรงกับนักเรียน อาจถูกนับในยอดรวมแต่ไม่ปรากฏในอันดับหรือยอดตามชั้น</p>
+          </section>
+          <section class="section" id="classes" aria-labelledby="classes-title">
+            <span class="section-number">04 / ห้องเรียน</span><h2 id="classes-title" tabindex="-1">ดูห้องเรียนและนักเรียนในห้อง</h2>
+            <ol class="steps"><li>เลือกแท็บ <strong>ห้องเรียน</strong> อ่านชื่อห้อง จำนวนนักเรียน และยอดทุนรวมจากบัตรห้อง</li><li>กด <strong>ดูรายละเอียด</strong> เพื่อดูจำนวนคน จำนวนรายการทุน ยอดรวม และเฉลี่ยต่อคนของห้อง ซึ่งหารด้วยนักเรียนทุกคนในห้อง</li><li>ตรวจรายชื่อ รหัส วันเกิด จำนวนทุน และยอดรวมรายคน กด <strong>ดูประวัติ</strong> เพื่อดูทุนเดิม หรือ <strong>เพิ่มทุน</strong> ในแถวนักเรียนที่ต้องการ</li><li>กด <strong>ปิด</strong> เพื่อกลับหน้าห้องเรียน</li></ol>
+            <div class="callout"><strong>ปุ่มที่ยังไม่ทำงานจริง</strong><p><strong>เพิ่มห้องเรียน</strong> ในหน้ารวมห้องเรียน และ <strong>ส่งออกรายงาน</strong> ในรายละเอียดห้อง เป็นข้อความแจ้งฟีเจอร์ในอนาคต ยังไม่เพิ่มห้องหรือสร้างไฟล์ เจ้าของข้อมูลต้องจัดการชีต <code>Classes</code> โดยตรง และรักษารหัสให้ตรงกับ <code>Students.class</code> เช่นรหัส <code>m1/1</code> ชื่อแสดง <code>ม.1/1</code> แล้วอ่านข้อมูลใหม่</p></div>
+          </section>
+          <section class="section" id="students" aria-labelledby="students-title">
+            <span class="section-number">05 / ทะเบียนนักเรียน</span><h2 id="students-title" tabindex="-1">รายชื่อ ตัวกรอง เพิ่มนักเรียน และประวัติ</h2>
+            <p>เลือกแท็บ <strong>นักเรียน</strong> แล้วเลือกห้องจากตัวกรอง หากต้องการดูทั้งหมดให้เลือก <strong>ทุกห้อง</strong> บัตรนักเรียนแสดงรหัส ห้อง วันเกิด และยอดทุนรวม</p>
+            <h3>เพิ่มนักเรียนใหม่</h3>
+            <ol class="steps"><li>ตรวจทะเบียนก่อนว่ามีรหัสนี้อยู่แล้วหรือไม่ จากนั้นกด <strong>เพิ่มนักเรียน</strong></li><li>กรอกช่องบังคับ: <strong>รหัสนักเรียน ชื่อ-นามสกุล วันเกิด และห้องเรียน</strong> เลือกห้องที่มีในรายการ</li><li>กรอกช่องเสริมตามข้อมูลที่จำเป็น: <strong>เบอร์ติดต่อ ชื่อผู้ปกครอง และเบอร์ผู้ปกครอง</strong> เว้นว่างได้</li><li>กด <strong>บันทึก</strong> รอผล แล้วตรวจว่าบัตรนักเรียนและแถวในชีตจริงตรงกัน หากไม่ต้องการเพิ่ม ให้กด <strong>ยกเลิก</strong></li></ol>
+            <p>ฝั่งเซิร์ฟเวอร์ปฏิเสธรหัสนักเรียนซ้ำ ไม่มีหน้าจอแก้ไขหรือลบนักเรียนในแอปที่ส่งมา หากข้อมูลผิด ให้เจ้าของทะเบียนตรวจแก้ในชีตอย่างระมัดระวัง แล้วซิงค์อ่านใหม่</p>
+            <div class="callout"><strong>รักษาเลขศูนย์นำหน้า</strong><p>แนะนำให้เจ้าของชีตกำหนดคอลัมน์รหัสและเบอร์โทรเป็นข้อความธรรมดาก่อนกรอกข้อมูล เป็นแนวปฏิบัติในการดูแลชีต ไม่ใช่การตรวจรูปแบบหรือความยาวที่แอปบังคับให้</p></div>
+            <h3>ดูประวัติการรับทุน</h3><ol class="steps"><li>กด <strong>ดูประวัติ</strong> บนบัตรนักเรียน หรือจากรายละเอียดห้อง</li><li>ตรวจชื่อ รหัส ห้อง วันเกิด ผู้ปกครอง และยอดทุนรวม อ่านประวัติวันที่ ชื่อทุน แหล่งทุน จำนวนเงิน เหตุผล ผู้ให้ทุน และรูปภาพ หากยังไม่เคยรับทุน ระบบแสดงข้อความว่ายังไม่มีประวัติ</li><li>คลิกรูปในประวัติเพื่อเปิดรูปในแท็บใหม่ แล้วกด <strong>ปิด</strong> เมื่ออ่านเสร็จ</li></ol>
+            <p class="small">ปุ่ม <strong>ดาวน์โหลดใบเสร็จ</strong> เป็นเพียงข้อความแจ้งฟีเจอร์ในอนาคต ยังไม่มีไฟล์ใบเสร็จให้ดาวน์โหลด</p>
+          </section>
+          <section class="section" id="grants" aria-labelledby="grants-title">
+            <span class="section-number">06 / บันทึกทุน</span><h2 id="grants-title" tabindex="-1">เพิ่มทุนให้ถูกคน และตรวจประวัติทุนซ้ำ</h2>
+            <ol class="steps"><li>ไปที่ <strong>นักเรียน → บัตรนักเรียน → เพิ่มทุน</strong> หรือ <strong>ห้องเรียน → ดูรายละเอียด → เพิ่มทุน</strong> ในแถวนักเรียน ไม่มีปุ่มเพิ่มทุนที่ส่วนหัวของหน้ารายการทุน</li><li>ตรวจรหัสนักเรียนที่เติมมา แล้วกรอกช่องบังคับ: <strong>วันที่ รหัสนักเรียน ชื่อทุน แหล่งทุน จำนวนเงิน (บาท) และเหตุผล</strong> ตรวจวันที่เริ่มต้นก่อนใช้</li><li>เลือกแหล่งทุนและเหตุผลให้ตรงเอกสาร กรอก <strong>ชื่อผู้ให้ทุน รูปภาพประกอบ และหมายเหตุ</strong> เมื่อจำเป็น ทั้งสามช่องนี้ไม่บังคับ</li><li>ตรวจประวัติเดิมและคำเตือนทุนซ้ำ แล้วกด <strong>บันทึก</strong> รอจนเสร็จ หากต้องการออกโดยไม่บันทึก ให้กด <strong>ยกเลิก</strong></li><li>เปิดประวัติ ตรวจรายการ ยอดเงิน และรูป แล้วตรวจแถวในชีตจริงอีกครั้ง อย่าอาศัยข้อความสำเร็จอย่างเดียว</li></ol>
+            <dl><dt>แหล่งทุน 5 ตัวเลือก</dt><dd>รัฐบาล (<code>government</code>), กาชาด (<code>redcross</code>), ท้องถิ่น (<code>local</code>), ชุมชน (<code>community</code>), ผู้บริจาคภายนอก (<code>external</code>)</dd><dt>เหตุผล 6 ตัวเลือก</dt><dd>เกรดดี (<code>good_grades</code>), รายได้น้อย (<code>low_income</code>), พ่อแม่เลี้ยงเดี่ยว (<code>single_parent</code>), เด็กกำพร้า (<code>orphan</code>), ความพิการ (<code>disability</code>), อื่นๆ (<code>other</code>)</dd></dl>
+            <div class="callout warning"><strong>ตรวจเองก่อนบันทึก</strong><p>ใช้รหัสที่มีอยู่จริงและจำนวนเงินมากกว่า 0 เป็นแนวปฏิบัติที่ควรทำ โค้ดฝั่งเซิร์ฟเวอร์ไม่ได้ตรวจว่านักเรียนมีอยู่จริงหรือจำนวนเงินเป็นบวก จึงอาจบันทึกรายการผิดได้</p></div>
+            <h3>คำเตือนทุนซ้ำเป็นคำแนะนำ ไม่ได้ห้ามบันทึก</h3><p>ตรวจจาก <strong>รหัสนักเรียนเดียวกันและชื่อทุนตรงกัน</strong> ในข้อมูลที่โหลดมา ย้อนหลัง 12 เดือนจากวันที่ปัจจุบันของเครื่อง ไม่ใช่จากวันที่ทุนที่กรอก และไม่ตรวจเมื่อเลือกแหล่งทุนรัฐบาล คำเตือนนี้ไม่ได้เปรียบเทียบว่าแหล่งทุนเดิมตรงกันหรือไม่</p>
+            <p>รายชื่อแนะนำสูงสุด 5 คนเรียงตามยอดทุนรวมย้อนหลัง 12 เดือนจากน้อยไปมาก เป็นเพียงข้อมูลประกอบ ไม่ใช่ผลตรวจคุณสมบัติหรือสิทธิ์รับทุน</p>
+            <details><summary>เหตุใดคำเตือนอาจไม่ตรงกับที่คาด</summary><p>การแก้ไขอาจตรวจเจอรายการตัวเอง เพราะไม่ได้ตัดรายการที่กำลังแก้ออก และเมื่อเว้นรหัส/ชื่อทุนหรือเปลี่ยนเป็นรัฐบาล ฟังก์ชันออกก่อนล้างคำเตือนเดิม จึงอาจค้างอยู่ ควรตรวจประวัติด้วยตนเองทุกครั้ง ทั้งเมื่อมีและไม่มีคำเตือน รวมถึงตรวจรายการที่ยังไม่ได้ซิงค์เข้าหน้าแอปด้วย</p></details>
+          </section>
+          <section class="section" id="images" aria-labelledby="images-title">
+            <span class="section-number">07 / รูปภาพประกอบ</span><h2 id="images-title" tabindex="-1">แนบรูปและตรวจผลการอัปโหลด</h2>
+            <ol class="steps"><li>ในแบบฟอร์มทุน กดเลือกไฟล์ที่ <strong>รูปภาพประกอบ (ถ้ามี)</strong> หน้าแอปจะแสดงภาพตัวอย่างบนเครื่อง ภาพตัวอย่างยังไม่ใช่หลักฐานว่าอัปโหลดสำเร็จ</li><li>ตรวจว่าเป็นรูปที่ได้รับอนุญาตให้เผยแพร่ แล้วบันทึกทุน</li><li>เปิด <strong>ดูประวัติ</strong> ของนักเรียน ตรวจรูปในรายการ และลองเปิดรูปจากประวัติ หากหาย ให้ตรวจชีตและแจ้งผู้ดูแลก่อนบันทึกซ้ำ</li></ol>
+            <div class="callout warning"><strong>ผู้มีลิงก์อาจดูภาพได้</strong><p>โค้ดอัปโหลดไป Drive และตั้งการแชร์เป็น <code>ANYONE_WITH_LINK</code> เพื่อให้ผู้มีลิงก์ดูได้ หลีกเลี่ยงภาพหรือเอกสารที่เปิดเผยข้อมูลอ่อนไหวของนักเรียน และยืนยันการอนุญาตก่อนแนบ</p></div>
+            <p>ไม่มีขนาดไฟล์สูงสุดที่กำหนดไว้ในโค้ด และไม่มีการตรวจ MIME/ขนาดอย่างรัดกุม อย่าคาดว่าระบบจะบีบอัดหรือคัดกรองไฟล์ให้ การเลือก <code>image/*</code> เป็นเพียงตัวช่วยในช่องเลือกไฟล์</p>
+            <details><summary>ข้อจำกัดเมื่ออัปโหลดหรือแก้ไขรูป</summary><ul><li>อัปโหลดล้มเหลวอาจยังบันทึกทุนสำเร็จ โดยใช้รูปเดิมหรือไม่มีรูป ฝั่งเซิร์ฟเวอร์ส่ง <code>uploadError</code> กลับมา แต่หน้าแอปไม่ได้แสดงค่านี้ จึงต้องตรวจประวัติหลังบันทึก</li><li>แก้ไขโดยไม่เลือกไฟล์ใหม่จะเก็บรูปเดิม แม้หน้าแก้ไขไม่แสดงภาพตัวอย่างเดิม ไม่มีปุ่มลบรูปอย่างเดียวในหน้าแอป</li><li>ฟังก์ชันเปิดแก้ไขไม่ได้รีเซ็ตช่องไฟล์ จึงอาจมีไฟล์ที่เลือกไว้ก่อนหน้าค้างและอัปโหลดซ้ำโดยไม่ตั้งใจ แนะนำรีเฟรชหน้าและตรวจข้อมูลโหลดสำเร็จก่อนแก้ไขรายการอื่นที่เกี่ยวกับรูป เลือกไฟล์ใหม่เฉพาะเมื่อจะเปลี่ยนรูปจริง</li></ul></details>
+          </section>
+          <section class="section" id="manage" aria-labelledby="manage-title">
+            <span class="section-number">08 / จัดการรายการ</span><h2 id="manage-title" tabindex="-1">แก้ไขและลบทุนการศึกษา</h2>
+            <h3>แก้ไขรายการเดิม</h3><ol class="steps"><li>เลือกแท็บ <strong>ทุนการศึกษา</strong> หาแถวโดยตรวจวันที่ รหัสนักเรียน ชื่อทุน และยอดเงิน ใช้ตัวกรองช่วยได้</li><li>กด <strong>แก้ไข</strong> ในแถวนั้น ตรวจข้อมูลทุกช่อง รวมถึงไฟล์ที่เลือกค้างตาม <a href="#images">ข้อจำกัดรูปภาพ</a></li><li>ปรับข้อมูลแล้วกด <strong>บันทึก</strong> จากนั้นตรวจรายการและชีตจริงอีกครั้ง กด <strong>ยกเลิก</strong> หากไม่ต้องการเก็บการแก้ไข</li></ol>
+            <h3>ลบรายการทุน</h3><ol class="steps"><li>สำรองข้อมูลที่จำเป็นกับเจ้าของชีตก่อนลบ ตรวจว่าเป็นรายการที่ต้องการลบจริง</li><li>กด <strong>ลบ</strong> ที่แถว ระบบเปิดกล่อง <strong>ยืนยันการลบ</strong> เลือก <strong>ยกเลิก</strong> เพื่อคงรายการ หรือ <strong>ลบ</strong> เพื่อยืนยัน</li><li>ตรวจว่ารายการหายจากหน้าแอปและแถวถูกลบในชีตจริง</li></ol>
+            <div class="callout warning"><strong>ไม่มีถังขยะหรือเลิกทำในแอป</strong><p>การลบทุนลบแถวในชีต แต่ไม่ลบไฟล์รูปบน Drive หากการเพิ่ม แก้ไข หรือลบล้มเหลวหรือไม่แน่ใจว่าเสร็จหรือยัง ให้ตรวจชีตและอ่านข้อมูลใหม่ก่อนลองซ้ำ เพื่อหลีกเลี่ยงรายการซ้ำหรือแก้ผิดรายการ</p></div>
+          </section>
+          <section class="section" id="csv" aria-labelledby="csv-title">
+            <span class="section-number">09 / ส่งออกข้อมูล</span><h2 id="csv-title" tabindex="-1">กรองรายการทุนและส่งออก CSV</h2>
+            <ol class="steps"><li>ในแท็บ <strong>ทุนการศึกษา</strong> เลือก <strong>แหล่งทุน</strong> และ/หรือ <strong>เดือน</strong> รายการจะแสดงเฉพาะที่ตรงทั้งสองเงื่อนไข</li><li>กลับไปดูทั้งหมดด้วย <strong>ทุกแหล่งทุน</strong> และล้างค่าเดือน ตัวกรองนี้มีผลเฉพาะรายการทุน ไม่เปลี่ยนแดชบอร์ดหรือขอบเขตรายงาน</li><li>กด <strong>ส่งออก CSV</strong> เพื่อรับไฟล์ <code>scholarships.csv</code> ที่รวม<strong>ทุนทั้งหมดที่โหลดอยู่</strong> แม้หน้ารายการจะถูกกรองอยู่</li></ol>
+            <div class="callout"><strong>CSV ไม่ใช่ผลลัพธ์ตามตัวกรอง</strong><p>ถ้าต้องการแบ่งชุดข้อมูล ต้องตรวจและคัดกรองหลังนำเข้าไฟล์ด้วยตนเอง โดยยังรักษาต้นฉบับไว้ ไฟล์จากข้อมูลตัวอย่างก็จะมีเฉพาะข้อมูลตัวอย่าง จึงต้องแน่ใจก่อนส่งออกว่าโหลดข้อมูลจริงสำเร็จ</p></div>
+            <h3>คอลัมน์และภาษาไทยในไฟล์</h3><p>ไฟล์ใช้ UTF-8 พร้อม BOM และหัวตารางภาษาไทย 8 ช่องตามลำดับ: <strong>วันที่, รหัสนักเรียน, ชื่อทุน, แหล่งทุน, จำนวน, เหตุผล, ผู้ให้ทุน, หมายเหตุ</strong> ไม่มีชื่อ-นามสกุลนักเรียน ห้องเรียน หรือรูปภาพ วันที่แสดงเป็น พ.ศ. แหล่งทุนใช้รหัสดิบ เช่น <code>government</code> ส่วนเหตุผลแปลงเป็นข้อความไทย</p>
+            <p>หากภาษาไทยอ่านผิด ให้เลือกนำเข้าแบบ UTF-8 หากเลขศูนย์นำหน้าหาย ให้กำหนดคอลัมน์รหัสเป็นข้อความตอนนำเข้า ไม่ใช่เปิดแล้วหวังว่าโปรแกรมจะรักษารหัสให้เอง</p>
+            <div class="callout warning"><strong>ตรวจไฟล์ก่อนใช้และส่งต่อ</strong><p>ข้อความชื่อทุน ผู้ให้ทุน หรือหมายเหตุที่เริ่มคล้ายสูตร เช่น <code>=</code>, <code>+</code>, <code>-</code>, <code>@</code> อาจถูกโปรแกรมตารางคำนวณตีความเป็นสูตร โค้ดส่งออกไม่ได้ป้องกันสูตร แม้ครอบข้อความด้วยเครื่องหมายคำพูด ควรนำเข้าเป็นข้อความและตรวจข้อมูลก่อนใช้ รวมถึงจำกัดการส่งต่อข้อมูลระบุตัวบุคคล</p></div>
+          </section>
+          <section class="section" id="reports" aria-labelledby="reports-title">
+            <span class="section-number">10 / รายงานและข้อมูลล่าสุด</span><h2 id="reports-title" tabindex="-1">สร้างรายงาน 4 แบบ และซิงค์ข้อมูล</h2>
+            <ol class="steps"><li>เลือกแท็บ <strong>รายงาน</strong> เลือก <strong>ประเภทรายงาน</strong></li><li>หากเลือก <strong>สรุปยอดทุนรายเดือน</strong> ให้เลือกเดือน หรือเว้นเดือนเพื่อรวมทั้งหมด</li><li>กด <strong>สร้างรายงาน</strong> แล้วอ่านผลลัพธ์ด้านล่าง หากเปลี่ยนชนิดหรือเดือน ให้กดสร้างอีกครั้ง</li></ol>
+            <dl><dt>สรุปยอดทุนรายเดือน</dt><dd>ยอดทุนรวม จำนวนรายการทุน และจำนวนรหัสนักเรียนผู้รับทุนที่ไม่ซ้ำ เฉพาะเดือนที่เลือก หากเว้นว่างใช้ทั้งหมด</dd><dt>รายงานทุนรายนักเรียน</dt><dd>นักเรียนในทะเบียนแต่ละคน พร้อมจำนวนทุนและยอดรวม ใช้ข้อมูลทุกเดือน รวมผู้ที่ไม่มีทุนด้วย</dd><dt>รายงานตามแหล่งทุน</dt><dd>จำนวนทุน ยอดรวม และเฉลี่ยต่อทุนของแต่ละแหล่ง ใช้ทุกเดือน ค่าเฉลี่ย = ยอดรวม ÷ จำนวนรายการทุน ปัดเป็นจำนวนเต็ม</dd><dt>รายงานตามห้องเรียน</dt><dd>จำนวนนักเรียนทั้งหมดในห้อง ยอดทุนรวม และเฉลี่ยต่อคน ใช้ทุกเดือน ค่าเฉลี่ย = ยอดทุน ÷ นักเรียนทุกคนในห้อง ไม่ใช่เฉพาะผู้รับทุน และปัดเป็นจำนวนเต็ม</dd></dl>
+            <div class="callout"><strong>ตัวเลือกเดือนใช้เฉพาะรายงานสรุป</strong><p>รายงานรายนักเรียน ตามแหล่งทุน และตามห้องเรียนไม่ใช้เดือนที่เลือก ปุ่มส่งออก PDF ของแอปถูกคอมเมนต์ไว้และฟังก์ชันยังเป็นเพียงตัวแทน ไม่มีการส่งออก PDF รายงานที่ใช้งานได้</p></div>
+            <h3>ซิงค์ Google Sheets คือการอ่านใหม่</h3><ol class="steps"><li>ในหน้ารายงาน กด <strong>ซิงค์ Google Sheets</strong> เพื่ออ่าน <code>Students</code>, <code>Scholarships</code> และ <code>Classes</code> ใหม่ ไม่ใช่อัปโหลดหรือบันทึกงานหลายรายการพร้อมกัน การเพิ่ม/แก้ไข/ลบบันทึกผ่านปุ่มของแต่ละรายการอยู่แล้ว</li><li>ตรวจว่าไม่มีคำเตือนข้อมูลตัวอย่าง และเทียบรายการกับชีตจริง หากเปิดผลรายงานไว้ ให้กด <strong>สร้างรายงาน</strong> อีกครั้งเพื่อคำนวณจากข้อมูลล่าสุด</li></ol>
+            <p>โค้ดเรียกอ่านใหม่อัตโนมัติทุก 5 นาที เฉพาะขณะสถานะหน้าแอปยังเข้าสู่ระบบอยู่</p>
+            <div class="callout warning"><strong>หยุดงานจริงเมื่อเห็นข้อมูลตัวอย่าง</strong><p>เมื่ออ่านข้อมูลไม่ได้ แอปใช้ข้อมูลตัวอย่างอย่างละหนึ่งรายการ: นักเรียน ทุน และห้องเรียน การใช้ข้อมูลตัวอย่าง<strong>ไม่ได้รับประกันว่าจะปิดการเขียน</strong> อย่าเพิ่ม แก้ไข หรือลบต่อ ให้แจ้งผู้ดูแลและตรวจโหลดข้อมูลจริงให้สำเร็จก่อน ข้อความ “ซิงค์ข้อมูลเรียบร้อยแล้ว” อาจปรากฏหลังเกิด fallback จึงต้องตรวจชีตจริง ไม่ใช่เชื่อข้อความสำเร็จอย่างเดียว</p></div>
+            <h3>พิมพ์คู่มือนี้เป็น PDF</h3><p>ใช้ <strong>พิมพ์ / PDF</strong> บนแถบเครื่องมือคู่มือ หรือคำสั่งพิมพ์ของเบราว์เซอร์ แล้วเลือกบันทึกเป็น PDF คู่มือจะรวมทุกบทและเปิดเนื้อหาที่พับไว้แม้กำลังค้นหาอยู่ จากนั้นคืนค่าการค้นหาและหัวข้อพับเมื่อปิดหน้าต่างพิมพ์ นี่คือการพิมพ์เอกสารคู่มือ ไม่ใช่การส่งออกรายงานจากแอป</p>
+          </section>
+          <section class="section" id="help" aria-labelledby="help-title">
+            <span class="section-number">11 / แก้ปัญหา</span><h2 id="help-title" tabindex="-1">ตรวจจากอาการที่พบ</h2>
+            <p class="lead">กดหัวข้อเพื่อเปิดคำแนะนำ เมื่อแจ้งผู้ดูแลให้บอกหน้าที่ใช้งาน เวลา และข้อความผิดพลาด โดยไม่ส่งรหัสผ่านหรือข้อมูลนักเรียนเกินจำเป็น</p>
+            <details><summary>เข้าสู่ระบบไม่สำเร็จ</summary><p>ตรวจชื่อผู้ใช้ รหัสผ่าน และประเภทผู้ใช้ให้ตรงกับบัญชีที่ได้รับ ถ้ายังไม่ได้ ให้เจ้าของระบบตรวจชีต <code>Role</code> และการเชื่อมต่อ ไม่ส่งรหัสผ่านลงกลุ่มสนทนาหรือใช้บัญชีทดสอบร่วมกัน</p></details>
+            <details><summary>โหลดไม่ได้ หรือเห็นข้อมูลตัวอย่าง / ยอดดูน้อยผิดปกติ</summary><p>หยุดการทำงานกับข้อมูลจริง อย่าคิดว่าปุ่มเขียนถูกปิด ให้ผู้ดูแลตรวจการเชื่อมต่อ ชื่อชีต และหัวคอลัมน์ แล้วอ่านใหม่ ตรวจรายการกับชีตจริงก่อนทำงานต่อ แม้มีข้อความซิงค์สำเร็จตามมาก็ตาม</p></details>
+            <details><summary>รายการทุนขึ้น “ไม่พบข้อมูล” แทนชื่อนักเรียน</summary><p>เทียบ <code>Scholarships.studentId</code> กับ <code>Students.id</code> รวมเลขศูนย์นำหน้า อย่าเพิ่มทุนซ้ำเพื่อแก้ชื่อ ให้เจ้าของทะเบียนตรวจรหัสจริง แก้รายการที่ผิด แล้วอ่านข้อมูลใหม่ รหัสไม่ตรงอาจทำให้ยอดตามห้อง/ระดับชั้นหรืออันดับไม่ตรงกับยอดรวม</p></details>
+            <details><summary>เพิ่มนักเรียนไม่ได้ ทั้งที่เพิ่งเริ่มใช้ชีต</summary><p>หากรหัสซ้ำ ให้ใช้ประวัติของรหัสเดิมก่อน หากชีตมีแต่หัวตาราง โค้ดตรวจรหัสอาจเรียก <code>getRange</code> ด้วยจำนวนแถวเป็นศูนย์และเกิดข้อผิดพลาด ให้ผู้ดูแลตรวจแก้ปัญหาโค้ด/การเริ่มข้อมูล ไม่สร้างนักเรียนสมมติเพื่อหลบข้อผิดพลาด</p></details>
+            <details><summary>รูปไม่ขึ้น แต่ระบบแจ้งบันทึกทุนแล้ว</summary><p>ตรวจประวัติและค่า <code>imageUrl</code> ในชีตจริง การอัปโหลดอาจล้มเหลวแต่ทุนยังบันทึกสำเร็จ ผู้ดูแลควรตรวจโฟลเดอร์และการแชร์ Drive ก่อนลองแก้ไขแนบใหม่ รีเฟรชหน้าก่อนแก้อีกรายการเพื่อล้างไฟล์ที่อาจค้าง หลีกเลี่ยงการสร้างทุนใหม่ซ้ำเพื่อแก้รูป</p></details>
+            <details><summary>บันทึกหรือลบค้าง ไม่แน่ใจว่าสำเร็จหรือไม่</summary><p>อย่ากดซ้ำทันที ให้ผู้ดูแลตรวจแถวในชีตจริง แล้วซิงค์อ่านใหม่ก่อนตัดสินใจลองอีกครั้ง ข้อความในหน้าแอปอาจไม่เพียงพอต่อการยืนยันผลจริง</p></details>
+            <details><summary>CSV มีแถวมากกว่าที่เห็น / เลขศูนย์หรือภาษาไทยผิด</summary><p>CSV รวมทุนทั้งหมดที่โหลด ไม่ใช้ตัวกรองหน้ารายการ นำเข้าโดยเลือก UTF-8 และตั้งรหัสเป็นข้อความ ตรวจการตีความสูตรในข้อความด้วย หากเลขศูนย์หายตั้งแต่ชีตต้นทาง ต้องให้เจ้าของทะเบียนเทียบรหัสจริงก่อนแก้</p></details>
+            <details><summary>เปลี่ยนเดือนแล้วรายงานไม่เปลี่ยน</summary><p>เดือนมีผลเฉพาะ “สรุปยอดทุนรายเดือน” ส่วนอีกสามรายงานใช้ทุกเดือน และต้องกด “สร้างรายงาน” หลังเปลี่ยนตัวเลือกทุกครั้ง ตัวกรองเดือนในหน้ารายการทุนเป็นอีกตัวหนึ่ง ไม่ได้เชื่อมกัน</p></details>
+            <details><summary>ห้องไม่อยู่ในตัวเลือก / ยอดระดับชั้นไม่ตรง</summary><p>ให้เจ้าของระบบตรวจ <code>Classes.id</code> และ <code>Students.class</code> ให้ตรงกัน และใช้รูปแบบ <code>m1/1</code> เมื่อต้องการให้สถิติระดับชั้นอ่านได้ ซิงค์แล้วตรวจใหม่ ค่าเฉลี่ยหารด้วยนักเรียนทั้งหมด จึงต่างจากการหารเฉพาะผู้รับทุนได้</p></details>
+            <details><summary>ปุ่มมีแต่ข้อความแจ้ง หรือผู้ปกครองไม่ได้รับอีเมล</summary><p>เพิ่มห้องเรียน ดาวน์โหลดใบเสร็จ และส่งออกรายงานห้องเรียนยังเป็นตัวแทน ส่วนส่งออก PDF ของแอปยังไม่เปิดใช้ ฟังก์ชันแจ้งอีเมลเขียนข้อความลง <code>console.log</code> เท่านั้น ไม่มีการส่งอีเมลจริง รวมถึงไม่มี SMS หรือ LINE ให้ส่งข่าวผ่านช่องทางที่หน่วยงานจัดไว้เอง</p></details>
+          </section>
+          <section class="section" id="appendix" aria-labelledby="appendix-title">
+            <span class="section-number">12 / ภาคผนวก</span><h2 id="appendix-title" tabindex="-1">ข้อมูลสำหรับเจ้าของระบบ</h2>
+            <p>รายละเอียดส่วนนี้อธิบายโค้ดที่ส่งมา ไม่ใช่หน้าตั้งค่าในแอปหรือหลักฐานว่าระบบจริงพร้อมใช้งาน</p>
+            <details><summary>ชื่อชีตและหัวคอลัมน์ที่ต้องตรงกัน</summary><p>ชื่อและตัวพิมพ์เล็ก/ใหญ่ของหัวคอลัมน์มีผล โค้ดใช้ชื่อหัวตารางเป็นคีย์ แม้ตัดช่องว่างรอบหัวคอลัมน์ให้อยู่แล้ว ควรรักษารายการและลำดับอ้างอิงต่อไปนี้:</p>
+              <h3>Students</h3><code class="schema">id,name,dob,class,contact,guardian,guardianContact</code>
+              <h3>Classes</h3><code class="schema">id,name</code>
+              <h3>Scholarships</h3><code class="schema">id,date,studentId,scholarshipName,source,amount,reason,giverName,notes,imageUrl</code>
+              <h3>Role</h3><code class="schema">username,password,role_value,name</code>
+              <p><code>Students.class</code> อ้างถึง <code>Classes.id</code> และ <code>Scholarships.studentId</code> อ้างถึง <code>Students.id</code> ควรรักษารหัสเป็นข้อความ โดยเฉพาะรหัสที่มีเลขศูนย์นำหน้า <code>dob</code> คือวันเกิด ส่วน <code>date</code> คือวันที่รับทุน หน้าแอปแปลงวันที่แสดงเป็น พ.ศ. โดยบวก 543; การรับส่งวันที่ใช้รูปแบบ ISO จึงควรตรวจวันที่กับต้นทางด้วย</p>
+              <p>ทุนใหม่สร้างรหัส <code>id</code> อัตโนมัติจากเวลา ฝั่งเซิร์ฟเวอร์อาศัยหัวคอลัมน์เหล่านี้เพื่อเขียนข้อมูล ตรวจหัว <code>id</code> และ <code>imageUrl</code> ก่อนแก้ปัญหารายการหรือรูป</p>
+            </details>
+            <details><summary>การเข้าสู่ระบบและการคุ้มครองข้อมูลก่อนใช้จริง</summary><p><code>loginUser</code> เทียบค่าใน <code>Role</code> โดยรหัสผ่านเก็บเป็นข้อความธรรมดา หน้าแอปเก็บชื่อ/บทบาทใน <code>sessionStorage</code> ซึ่งเป็นสถานะฝั่งเครื่องผู้ใช้ ไม่ใช่เซสชันที่เซิร์ฟเวอร์ยืนยันอย่างปลอดภัย</p><p><code>getAllData</code> อ่านข้อมูลสามชีต และฟังก์ชันเพิ่ม/แก้ไข/ลบใน <code>API.gs</code> ไม่มีการตรวจสิทธิ์ผู้ใช้ฝั่งเซิร์ฟเวอร์ ไม่มีการบังคับสิทธิ์แยกสองบทบาท เจ้าของระบบควรจำกัดการเข้าถึงและเพิ่มการยืนยันตัวตน/สิทธิ์ที่เหมาะสมก่อนใช้ข้อมูลเด็กจริง รวมถึงเปลี่ยนบัญชีทดสอบและจำกัดการแชร์ชีต สิ่งเหล่านี้เป็นคำแนะนำให้เจ้าของระบบดำเนินการ ไม่ใช่ตัวเลือกที่มีอยู่ในแอปนี้</p><p>ภาพที่อัปโหลดตั้งผู้มีลิงก์ดูได้ จึงต้องทบทวนการอนุญาตและการเก็บข้อมูลเป็นพิเศษ ห้ามเผยแพร่รหัสผ่าน ลิงก์ภาพส่วนตัว หรือข้อมูลระบุตัวนักเรียนโดยไม่จำเป็น</p></details>
+            <details><summary>แยกสิ่งที่ทำได้จริง ข้อจำกัด และตัวแทนฟีเจอร์</summary>
+              <div class="table-wrap"><table><caption>สถานะตามโค้ดที่ตรวจ ไม่ใช่ผลทดสอบระบบจริง</caption><thead><tr><th scope="col">สถานะ</th><th scope="col">รายการ</th></tr></thead><tbody>
+                <tr><th scope="row">มีการทำงานในโค้ด</th><td>เข้าสู่ระบบ อ่านข้อมูล ดูแดชบอร์ด/ห้อง/นักเรียน เพิ่มนักเรียน ดูประวัติ เพิ่ม/แก้ไข/ลบทุน แนบรูป กรองรายการ CSV รายงาน 4 แบบ และอ่านข้อมูลใหม่</td></tr>
+                <tr><th scope="row">มีข้อจำกัดหรือบั๊ก</th><td>สถานะล็อกอินฝั่งเครื่อง ไม่มีตรวจสิทธิ์ CRUD; fallback ไม่ได้ปิดการเขียน; คำเตือนซ้ำอาจค้าง; รูปอัปโหลดไม่สำเร็จแต่ทุนบันทึกได้; ช่องไฟล์แก้ไขอาจค้าง; ชีตนักเรียนว่างอาจเพิ่มไม่ได้; CSV ไม่กรองและไม่ป้องกันสูตร; เดือนมีผลเฉพาะรายงานสรุป</td></tr>
+                <tr><th scope="row">ยังเป็นตัวแทน</th><td>เพิ่มห้องเรียน ดาวน์โหลดใบเสร็จ ส่งออกรายงานห้องเรียน และ <code>exportPDF</code> (ปุ่ม PDF ถูกคอมเมนต์ไว้) ไม่มีอีเมลจริง/SMS/LINE</td></tr>
+              </tbody></table></div>
+            </details>
+            <details><summary>จุดอ้างอิงในไฟล์ต้นฉบับ</summary><ul><li><code>index.html</code> (ไฟล์แอปต้นฉบับ): แบบฟอร์มและตัวเลือกบรรทัด 313–551; โหลด/fallback และล็อกอิน 595–666; ตรวจซ้ำ/แนะนำ 727–744; บันทึกทุนและรูป 746–822</li><li><code>index.html</code> (ไฟล์แอปต้นฉบับ): สถิติ/รายการ 849–893; อีเมลจำลอง ซิงค์ CSV และรายงาน 896–913; ประวัติ/ห้อง/แก้ไข/ลบ/ตัวแทนฟีเจอร์ 919–1027</li><li><code>API.gs</code>: หน้าแอป/อ่านชีต/ล็อกอิน 8–88; บันทึกทุนและแชร์ภาพ 91–177; เพิ่มนักเรียน 180–214; ลบทุน 216–240</li></ul><p>ไม่มีภาพหน้าจอจำลองหรือข้อมูลบัญชีตัวอย่างในคู่มือนี้ และไม่มีการอ้างว่าได้ทดสอบการเขียน Google Sheets หรือ Drive ที่ติดตั้งจริง</p></details>
+          </section>
+        </div>
+        <footer><p>คู่มือออฟไลน์ • อ้างอิงจากไฟล์ต้นฉบับที่ส่งมอบ • โปรดตรวจข้อมูลจริงก่อนยืนยันรายการสำคัญ</p><a class="back" href="#top">กลับด้านบน</a></footer>
+      </main>
+    </div>
+  </div>
+  <script>
+    (() => {
+      'use strict';
+      const root = document.documentElement;
+      root.classList.add('js');
+      const search = document.getElementById('search');
+      const sections = [...document.querySelectorAll('.section')];
+      const details = [...document.querySelectorAll('#chapters details')];
+      const status = document.getElementById('search-status');
+      const empty = document.getElementById('empty');
+      const theme = document.getElementById('theme');
+      const textIndex = sections.map(section => section.textContent.toLocaleLowerCase('th'));
+      let searchDetails = null;
+      let printState = null;
+      function applyTheme(value) {
+        const dark = value === 'dark';
+        root.dataset.bsTheme = dark ? 'dark' : 'light';
+        theme.setAttribute('aria-pressed', String(dark));
+        theme.textContent = dark ? 'โหมดสว่าง' : 'โหมดมืด';
+      }
+      try { applyTheme(localStorage.getItem('scholarship-manual-theme')); } catch (_) { applyTheme('light'); }
+      theme.addEventListener('click', () => {
+        applyTheme(root.dataset.bsTheme === 'dark' ? 'light' : 'dark');
+        try { localStorage.setItem('scholarship-manual-theme', root.dataset.bsTheme); } catch (_) { /* Theme still works without storage. */ }
+      });
+      function filter() {
+        const query = search.value.trim().toLocaleLowerCase('th');
+        if (query && searchDetails === null) searchDetails = details.map(item => item.open);
+        sections.forEach((section, index) => { section.hidden = Boolean(query) && !textIndex[index].includes(query); });
+        if (query) {
+          details.forEach(item => { if (!item.closest('.section').hidden) item.open = true; });
+        } else if (searchDetails !== null) {
+          details.forEach((item, index) => { item.open = searchDetails[index]; });
+          searchDetails = null;
+        }
+        const count = sections.filter(section => !section.hidden).length;
+        empty.hidden = count !== 0;
+        status.textContent = query ? `พบ ${count} จาก ${sections.length} บท — ค้นหา “${search.value.trim()}”` : `แสดงครบ ${sections.length} บท • เลือกหัวข้อจากสารบัญ หรือค้นหาคำที่ต้องการ`;
+      }
+      function clearSearch(focus) { search.value = ''; filter(); if (focus) search.focus(); }
+      search.addEventListener('input', filter);
+      search.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); clearSearch(true); } });
+      document.getElementById('clear').addEventListener('click', () => clearSearch(true));
+      document.getElementById('empty-clear').addEventListener('click', () => clearSearch(true));
+      document.getElementById('expand').addEventListener('click', () => { details.forEach(item => { item.open = true; }); });
+      document.getElementById('collapse').addEventListener('click', () => { details.forEach(item => { item.open = false; }); });
+      function revealAnchor(hash, focus) {
+        const target = document.getElementById(hash.slice(1));
+        if (!target) return;
+        clearSearch(false);
+        document.querySelectorAll('.toc a').forEach(link => {
+          if (link.hash === hash) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
+        });
+        if (focus) {
+          const heading = target.querySelector('h2') || target;
+          if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex', '-1');
+          heading.focus({ preventScroll:true });
+          target.scrollIntoView({ behavior:'auto', block:'start' });
+        }
+      }
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', event => {
+          if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+          revealAnchor(link.hash, true);
+        });
+      });
+      window.addEventListener('hashchange', () => revealAnchor(location.hash, true));
+      function beforePrint() {
+        if (printState !== null) return;
+        printState = { hidden:sections.map(section => section.hidden), open:details.map(item => item.open) };
+        sections.forEach(section => { section.hidden = false; });
+        details.forEach(item => { item.open = true; });
+      }
+      function afterPrint() {
+        if (printState === null) return;
+        sections.forEach((section, index) => { section.hidden = printState.hidden[index]; });
+        details.forEach((item, index) => { item.open = printState.open[index]; });
+        printState = null;
+      }
+      window.addEventListener('beforeprint', beforePrint);
+      window.addEventListener('afterprint', afterPrint);
+      const printMedia = window.matchMedia('print');
+      printMedia.addEventListener('change', event => { if (event.matches) beforePrint(); else afterPrint(); });
+      document.getElementById('print').addEventListener('click', () => {
+        beforePrint();
+        try { window.print(); } finally { afterPrint(); }
+      });
+      filter();
+      if (location.hash) revealAnchor(location.hash, false);
+    })();
+  </script>
+</body>
+</html>
